@@ -36,6 +36,24 @@ class App extends Component {
       .catch(error => console.log(error));
   }
 
+  componentDidUpdate(prevProps, prevState) {
+    if (this.state.search !== prevState.search) {
+      console.log('Inside first if');
+      if (this.state.search === "") {
+        console.log('Inside second if');
+        axios
+          .get('https://api.github.com/users/juhrard/followers')
+          .then(response => {
+            this.setState({
+              users: response.data
+            });
+            console.log(response);
+          })
+          .catch(error => console.log(error));
+      }
+    }
+  }
+
   handleChanges = e => {
     this.setState({
       search: e.target.value
@@ -45,7 +63,7 @@ class App extends Component {
   fetchUser = e => {
     e.preventDefault();
     axios
-      .get(`https://api.github.com/users/${this.state.search}/`)
+      .get(`https://api.github.com/users/${this.state.search}`)
       .then(response => {
         this.setState({
           users: [response.data]
