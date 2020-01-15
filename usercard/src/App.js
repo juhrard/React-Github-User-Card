@@ -17,7 +17,8 @@ class App extends Component {
       .then(response => {
         console.log(response)
         this.setState({
-          users: [response.data]
+          users: [response.data],
+          logins: []
         });
       })
 
@@ -28,31 +29,37 @@ class App extends Component {
     axios
       .get('https://api.github.com/users/juhrard/followers')
       .then(response => {
-        console.log(response)
-        this.setState({
-          users: [...this.state.users, ...response.data]
-        });
-      })
+        console.log('followers axios call: ', response.data)
+        response.data.map(user => {
+          axios
+          .get(`https://api.github.com/users/${user.login}`)
+          .then(response => {
+            this.setState({
+              users: [...this.state.users, response.data]
+            });
+          })
+        })
+      }) 
       .catch(error => console.log(error));
   }
 
-  componentDidUpdate(prevProps, prevState) {
-    if (this.state.search !== prevState.search) {
-      console.log('Inside first if');
-      if (this.state.search === "") {
-        console.log('Inside second if');
-        axios
-          .get('https://api.github.com/users/juhrard/followers')
-          .then(response => {
-            this.setState({
-              users: response.data
-            });
-            console.log(response);
-          })
-          .catch(error => console.log(error));
-      }
-    }
-  }
+  // componentDidUpdate(prevProps, prevState) {
+  //   if (this.state.search !== prevState.search) {
+  //     console.log('Inside first if');
+  //     if (this.state.search === "") {
+  //       console.log('Inside second if');
+  //       axios
+  //         .get('https://api.github.com/users/juhrard/followers')
+  //         .then(response => {
+  //           this.setState({
+  //             users: response.data
+  //           });
+  //           console.log(response);
+  //         })
+  //         .catch(error => console.log(error));
+  //     }
+  //   }
+  // }
 
   handleChanges = e => {
     this.setState({
@@ -74,7 +81,7 @@ class App extends Component {
   };
 
   render() {
-    console.log(this.state.users)
+    console.log('render users ', this.state.users);
     return (
       <div className="App">
         <input
@@ -88,5 +95,17 @@ class App extends Component {
     );
   }
 }
+
+// this.state.logins.map(login => {
+//   axios
+//     .get(`https://api.github.com/users/${login}`)
+//     .then(response => {
+//       console.log(response)
+//       this.setState({
+//         users: [...this.state.users, response.data]
+//       });
+//     })
+//   })
+// })
 
 export default App;

@@ -3,13 +3,14 @@ import React from "react";
 const userCardStyle = {
   width: '500px',
   height: '700px',
-  background: 'grey',
+  background: 'lightgrey',
   display: 'flex',
   flexFlow: 'column',
   justifyContent: 'space-evenly',
   alignItems: 'center',
   borderRadius: '5px',
-  margin: '50px'
+  margin: '50px',
+  padding: '20px'
 }
 
 function UserCard({user}) {
@@ -20,6 +21,8 @@ function UserCard({user}) {
         <div>
           <h3>{user.name}</h3>
           <p>{user.login}</p>
+          <p>{user.location}</p>
+          <p>{user.bio}</p>
         </div>
       </div>
     </>
